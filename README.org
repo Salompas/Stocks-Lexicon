@@ -1,0 +1,43 @@
+* Stocks Lexicon
+The idea of this repository is to provide a method to map stock names to market capitalization categories.
+Given a stock name, either a ticker symbol or the name of the company, we should be able to recover the firm's market cap.
+
+* Usage
+First, clone the repository to your project folder:
+#+BEGIN_SRC bash
+  cd Project
+  git clone https://github.com/Salompas/stockslexicon.git
+  # creates a new folder named stockslexicon
+#+END_SRC
+The module defines a single class `Stock` that has methods to interact with the data. You can import the class directly:
+#+BEGIN_SRC python
+  from stockslexicon.stocks import Stocks
+  stocks = Stocks()                # instantiate the class
+#+END_SRC
+All methods of the class are documented and can be accessed via `help(Stocks)`.
+
+* Examples
+To recover the market size of a firm:
+#+BEGIN_SRC python
+  stocks.size('AAPL')             # market size in 2018 (default)
+  stocks.size('AAPL', '2007')       # market size in 2007
+#+END_SRC
+To recover the name of a stock given its ticker:
+#+BEGIN_SRC python
+  stocks('AAPL', 'name')          # recovers name of stock with ticker AAPL
+  stocks('AAPL', 'legal_name')    # legal name of stock with ticker AAPL
+#+END_SRC
+To recover the market capitalization in dollars:
+#+BEGIN_SRC python
+  stocks('AAPL', '2007')          # market cap in dollars on 2007
+  stocks('AAPL', '2018')          # market cap in dollars on 2018
+#+END_SRC
+
+* Details
+The market capitalization data covers (almost) all stocks listed in the United States from 2007 to 2018 (inclusive).
+
+The market capitalization is computed at the end of each year, except in 2018 which computes the market capitalization in some date in October (this was when I first collected the data).
+
+The market capitalization when not available for a company in some year is replaced by a zero (0).
+
+There are two names available for each company, a common name (denoted by `name`) and its legal name (denoted by `legal_name`). To obtain the common name we take each legal name and remove the words: Inc, Corp and Group.
