@@ -45,7 +45,7 @@ def loadMarketcapNames(path='data/'):
     Output:
      marketcap: numpy array of integers, market capitalization of
                 company in dollars for most recent year (2018)
-v     name: numpy array of strings, company name (e.g.: Apple Inc)
+     name: numpy array of strings, company name (e.g.: Apple Inc)
      ticker: numpy array of strings, company ticker symbol (e.g.: AAPL)
     """
     with open(f'{path}marketcap.csv', 'r') as csv:
@@ -58,10 +58,14 @@ v     name: numpy array of strings, company name (e.g.: Apple Inc)
     name = np.zeros(total, dtype='<U500')  # name < 500 chars
     ticker = np.zeros(total, dtype='<U10')  # ticker < 10 chars
     for i, line in zip(np.arange(total), data):
+        # splitting on comma only does not work even though the file is
+        # supposedly csv, since some names have "AutoWeb, Inc", "AUTO"
+        # the comma in the middle of the name breaks things
         split = line.replace('"', '').strip().split(',')
         marketcap[i] = int(float(split[0]))
-        name[i] = split[1]
-        ticker[i] = split[2]
+        # sometimes there are commas in the name, generating additional splits
+        name[i] = ' '.join(split[1:-1]).strip()
+        ticker[i] = split[-1].strip()   # ticker is always the last
     return (marketcap, name, ticker)
 
 
