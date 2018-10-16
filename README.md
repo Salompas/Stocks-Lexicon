@@ -1,12 +1,12 @@
 # Table of Contents
 
-1.  [Stocks Lexicon](#org61df977)
-2.  [Usage](#org05f936b)
-3.  [Examples](#org17b6cb9)
-4.  [Details](#org945e571)
+1.  [Stocks Lexicon](#org6b84fac)
+2.  [Usage](#org7fd5096)
+3.  [Examples](#org5322093)
+4.  [Details](#orga1270ae)
 
 
-<a id="org61df977"></a>
+<a id="org6b84fac"></a>
 
 # Stocks Lexicon
 
@@ -14,7 +14,7 @@ The idea of this repository is to provide a method to map stock names to market 
 Given a stock name, either a ticker symbol or the name of the company, we should be able to recover the firm's market cap.
 
 
-<a id="org05f936b"></a>
+<a id="org7fd5096"></a>
 
 # Usage
 
@@ -32,7 +32,7 @@ The module defines a single class \`Stock\` that has methods to interact with th
 All methods of the class are documented and can be accessed via \`help(Stocks)\`.
 
 
-<a id="org17b6cb9"></a>
+<a id="org5322093"></a>
 
 # Examples
 
@@ -52,11 +52,13 @@ To recover the market capitalization in dollars:
     stocks('AAPL', '2018')          # market cap in dollars on 2018
 
 
-<a id="org945e571"></a>
+<a id="orga1270ae"></a>
 
 # Details
 
 The market capitalization data covers (almost) all stocks listed in the United States from 2007 to 2018 (inclusive).
+
+For a stock to be covered, it has to be available in 2018. If the company went bankrupt in 2017, then the company's stock will not show up in the data. If a stock that is available in 2018 (in October to be precise) and is not in the data, then it is most likely the result of a bug (please report it).
 
 The market capitalization is computed at the end of each year, except in 2018 which computes the market capitalization in some date in October (this was when I first collected the data).
 

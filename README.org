@@ -36,6 +36,8 @@ To recover the market capitalization in dollars:
 * Details
 The market capitalization data covers (almost) all stocks listed in the United States from 2007 to 2018 (inclusive).
 
+For a stock to be covered, it has to be available in 2018. If the company went bankrupt in 2017, then the company's stock will not show up in the data. If a stock that is available in 2018 (in October to be precise) and is not in the data, then it is most likely the result of a bug (please report it).
+
 The market capitalization is computed at the end of each year, except in 2018 which computes the market capitalization in some date in October (this was when I first collected the data).
 
 The market capitalization when not available for a company in some year is replaced by a zero (0).
