@@ -1,22 +1,176 @@
 # Table of Contents
 
-1.  [Stocks Lexicon](#org19cb052)
-2.  [Usage](#orgeff2112)
-3.  [Examples](#org07dcdd1)
-4.  [Details](#orgdea637a)
+1.  [Stocks Lexicon](#orgba5781f)
+2.  [Installation](#orgd7d9b1b)
+3.  [Examples](#org8c47d49)
+4.  [Details](#org272ba67)
 
 
-<a id="org19cb052"></a>
+<a id="orgba5781f"></a>
 
 # Stocks Lexicon
 
-The idea of this repository is to provide a method to map stock names to market capitalization categories.
-Given a stock name, either a ticker symbol or the name of the company, we should be able to recover the firm's market cap.
+The main idea for this project is to provide a way to generalize a company's name/ticker to its size (market cap) and industry category.
+This repository provides methods that map a stock's name/ticker to its market capitalization and its industry category.
+The market capitalization of a company is categorized depending on how big the company is.
+The market cap categories and industry categories are listed below:
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
 
-<a id="orgeff2112"></a>
+<colgroup>
+<col  class="org-left" />
 
-# Usage
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Market Capitalization (in US$)</th>
+<th scope="col" class="org-left">Category</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left">Less than $50 million</td>
+<td class="org-left">Nano</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Between $50 million and $300 million &nbsp;</td>
+<td class="org-left">Micro</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Between $300 million and $2 billion</td>
+<td class="org-left">Small</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Between $2 billion and $10 billion</td>
+<td class="org-left">Mid</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Between $10 billion and $200 billion</td>
+<td class="org-left">Large</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Grater than $200 billion</td>
+<td class="org-left">Mega</td>
+</tr>
+</tbody>
+</table>
+
+<br/>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Industry Categories</th>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-left">&#xa0;</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="org-left">Automotive</td>
+<td class="org-left">Consumer Durables &nbsp;</td>
+<td class="org-left">Food & Beverage</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Material & Construction &nbsp;</td>
+<td class="org-left">Insurance</td>
+<td class="org-left">Banking</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Wholesale</td>
+<td class="org-left">Metals & Mining</td>
+<td class="org-left">Computer Software & Services</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Chemicals</td>
+<td class="org-left">Leisure</td>
+<td class="org-left">Transportation</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Telecommunications</td>
+<td class="org-left">Media</td>
+<td class="org-left">Electronics</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Health Services</td>
+<td class="org-left">Utilities</td>
+<td class="org-left">Tobacco</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Financial Services</td>
+<td class="org-left">Diversified Services</td>
+<td class="org-left">Internet</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Retail</td>
+<td class="org-left">Specialty Retail</td>
+<td class="org-left">Conglomerates</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Computer Hardware</td>
+<td class="org-left">Aerospace/Defense</td>
+<td class="org-left">Real Estate</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Drugs</td>
+<td class="org-left">Energy</td>
+<td class="org-left">Consumer NonDurables</td>
+</tr>
+
+
+<tr>
+<td class="org-left">Manufacturing</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">Empty String (none available)</td>
+</tr>
+</tbody>
+</table>
+
+
+<a id="orgd7d9b1b"></a>
+
+# Installation
 
 First, clone the repository to your project folder:
 
@@ -32,7 +186,7 @@ The module defines a single class \`Stock\` that has methods to interact with th
 All methods of the class are documented and can be accessed via \`help(Stocks)\`.
 
 
-<a id="org07dcdd1"></a>
+<a id="org8c47d49"></a>
 
 # Examples
 
@@ -62,7 +216,7 @@ To generalize a company's name or ticker:
     stocks.generalizeName('Alphabet', 2018)  # ('Mega', 'Internet')
 
 
-<a id="orgdea637a"></a>
+<a id="org272ba67"></a>
 
 # Details
 

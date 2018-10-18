@@ -1,8 +1,37 @@
 * Stocks Lexicon
-The idea of this repository is to provide a method to map stock names to market capitalization categories.
-Given a stock name, either a ticker symbol or the name of the company, we should be able to recover the firm's market cap.
+The main idea for this project is to provide a way to generalize a company's name/ticker to its size (market cap) and industry category.
+This repository provides methods that map a stock's name/ticker to its market capitalization and its industry category.
+The market capitalization of a company is categorized depending on how big the company is.
+The market cap categories and industry categories are listed below:
 
-* Usage
+|---------------------------------------------+----------|
+| Market Capitalization (in US$)              | Category |
+|---------------------------------------------+----------|
+| Less than $50 million                       | Nano     |
+| Between $50 million and $300 million &nbsp; | Micro    |
+| Between $300 million and $2 billion         | Small    |
+| Between $2 billion and $10 billion          | Mid      |
+| Between $10 billion and $200 billion        | Large    |
+| Grater than $200 billion                    | Mega     |
+|---------------------------------------------+----------|
+<br/>
+|--------------------------------+--------------------------+-------------------------------|
+| Industry Categories            |                          |                               |
+|--------------------------------+--------------------------+-------------------------------|
+| Automotive                     | Consumer Durables &nbsp; | Food & Beverage               |
+| Material & Construction &nbsp; | Insurance                | Banking                       |
+| Wholesale                      | Metals & Mining          | Computer Software & Services  |
+| Chemicals                      | Leisure                  | Transportation                |
+| Telecommunications             | Media                    | Electronics                   |
+| Health Services                | Utilities                | Tobacco                       |
+| Financial Services             | Diversified Services     | Internet                      |
+| Retail                         | Specialty Retail         | Conglomerates                 |
+| Computer Hardware              | Aerospace/Defense        | Real Estate                   |
+| Drugs                          | Energy                   | Consumer NonDurables          |
+| Manufacturing                  |                          | Empty String (none available) |
+|--------------------------------+--------------------------+-------------------------------|
+
+* Installation
 First, clone the repository to your project folder:
 #+BEGIN_SRC bash
   cd Project
