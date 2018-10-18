@@ -21,29 +21,44 @@ class Stocks:
          - cleaned legal name ('name')
         """
 
-        # Load original data
-        (_, names, ticker) = parser.loadMarketcapNames(_DATA_FOLDER)
-        (ticker_mcap, marketcap, years) = parser.loadMarketcapYears(_DATA_FOLDER)
-        stocks_names = dict(zip(ticker, names))
+        # Load all ticker symbols and names available in 2018
+        name = parser.loadCompanyNames(_DATA_FOLDER)
 
-        # Create dictionary to store marketcap per year and names
-        self.contents = dict.fromkeys(ticker_mcap)
-        for i in np.arange(len(ticker_mcap)):
-            self.contents[ticker_mcap[i]] = dict(zip(years, marketcap[i, :]))
-            legalName = stocks_names[ticker_mcap[i]]
+        # Load map between ticker and industry category in 2018
+        industry = parser.loadIndustryCategories(_DATA_FOLDER)
+
+        # Load market cap data for the 2007-2018 period
+        (ticker, marketcap, year) = parser.loadMarketcapYears(_DATA_FOLDER)
+
+        # Create dictionary to map ticker to contents:
+        # - Market cap per year
+        # - Company legal name
+        # - Company name optimized for search
+        # - Company industry category
+        self.contents = dict.fromkeys(ticker)
+        for i in np.arange(len(ticker)):
+            legalName = name[ticker[i]]
             clearName = str(parser.clearNames(legalName))
-            self.contents[ticker_mcap[i]].update(legal_name=legalName)
-            self.contents[ticker_mcap[i]].update(name=clearName)
+            try:
+                industryCategory = industry[ticker[i]]
+            except KeyError:
+                industryCategory = ''  # not available
+            self.contents[ticker[i]] = dict(
+                zip(year, marketcap[i, :]),
+                legal_name=legalName,
+                name=clearName,
+                industry=industryCategory
+            )
         # store useful statistics for printing object
-        self.total_tickers = len(ticker_mcap)
-        self.total_years = len(years)
-        self.year_start = int(years[0])
-        self.year_end = int(years[-1])
+        self.total_tickers = len(ticker)
+        self.total_years = len(year)
+        self.year_start = int(year[0])
+        self.year_end = int(year[-1])
         self.range_years = range(self.year_start, self.year_end + 1)
 
     def __repr__(self):
-        return f'Stocks: {self.total_tickers} assets'\
-            + f' over {str(self.range_years)}'
+        return (f'Stocks: {self.total_tickers} assets',
+                f' over {str(self.range_years)}')
 
     def __call__(self, ticker, field=''):
         """
@@ -60,7 +75,8 @@ class Stocks:
          self('AAPL', '2007') returns the company's marketcap in 2007
         """
         if field == '':
-            return self.contents[ticker]
+            for key in self.contents[ticker]:
+                print(f'{key}: {self.contents[ticker][key]}')
         else:
             return self.contents[ticker][field]
 
@@ -169,6 +185,10 @@ class Stocks:
             self.__build_list_of_names__()
             return self.allNames
 
+# # Remove this
+# (marketcap, names, ticker) = parser.loadMarketcapNames(_DATA_FOLDER)
+
 
 # Alert user of library being loaded
-print('Loaded: stockslexicon/stocks.py')
+print(f'Loaded: stockslexicon/stocks.py\n',
+      f'To use the module instantiate the class: Stocks')
