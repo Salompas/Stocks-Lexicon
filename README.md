@@ -1,12 +1,12 @@
 # Table of Contents
 
-1.  [Stocks Lexicon](#org6b84fac)
-2.  [Usage](#org7fd5096)
-3.  [Examples](#org5322093)
-4.  [Details](#orga1270ae)
+1.  [Stocks Lexicon](#org19cb052)
+2.  [Usage](#orgeff2112)
+3.  [Examples](#org07dcdd1)
+4.  [Details](#orgdea637a)
 
 
-<a id="org6b84fac"></a>
+<a id="org19cb052"></a>
 
 # Stocks Lexicon
 
@@ -14,7 +14,7 @@ The idea of this repository is to provide a method to map stock names to market 
 Given a stock name, either a ticker symbol or the name of the company, we should be able to recover the firm's market cap.
 
 
-<a id="org7fd5096"></a>
+<a id="orgeff2112"></a>
 
 # Usage
 
@@ -32,7 +32,7 @@ The module defines a single class \`Stock\` that has methods to interact with th
 All methods of the class are documented and can be accessed via \`help(Stocks)\`.
 
 
-<a id="org5322093"></a>
+<a id="org07dcdd1"></a>
 
 # Examples
 
@@ -51,8 +51,18 @@ To recover the market capitalization in dollars:
     stocks('AAPL', '2007')          # market cap in dollars on 2007
     stocks('AAPL', '2018')          # market cap in dollars on 2018
 
+To recover the company's industry category:
 
-<a id="orga1270ae"></a>
+    stocks.industry('AAPL')         # industry category for AAPL
+    stocks.industryFromName('Apple')  # industry category for Apple
+
+To generalize a company's name or ticker:
+
+    stocks.generalizeTicker('GOOG', '2007')  # ('Large', 'Internet')
+    stocks.generalizeName('Alphabet', 2018)  # ('Mega', 'Internet')
+
+
+<a id="orgdea637a"></a>
 
 # Details
 
@@ -65,3 +75,5 @@ The market capitalization is computed at the end of each year, except in 2018 wh
 The market capitalization when not available for a company in some year is replaced by a zero (0).
 
 There are two names available for each company, a common name (denoted by \`name\`) and its legal name (denoted by \`legal<sub>name</sub>\`). To obtain the common name we take each legal name and remove the words: Inc, Corp and Group.
+
+The industry categories are not always available (for about 150 stocks). This happens for exchange traded funds (ETFs), over-the-counter contracts (OTCs) and some other stocks. When a category is not available an empty string is returned instead.

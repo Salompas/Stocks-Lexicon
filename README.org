@@ -32,7 +32,16 @@ To recover the market capitalization in dollars:
   stocks('AAPL', '2007')          # market cap in dollars on 2007
   stocks('AAPL', '2018')          # market cap in dollars on 2018
 #+END_SRC
-
+To recover the company's industry category:
+#+BEGIN_SRC python
+  stocks.industry('AAPL')         # industry category for AAPL
+  stocks.industryFromName('Apple')  # industry category for Apple
+#+END_SRC
+To generalize a company's name or ticker:
+#+BEGIN_SRC python
+  stocks.generalizeTicker('GOOG', '2007')  # ('Large', 'Internet')
+  stocks.generalizeName('Alphabet', 2018)  # ('Mega', 'Internet')
+#+END_SRC
 * Details
 The market capitalization data covers (almost) all stocks listed in the United States from 2007 to 2018 (inclusive).
 
@@ -43,3 +52,5 @@ The market capitalization is computed at the end of each year, except in 2018 wh
 The market capitalization when not available for a company in some year is replaced by a zero (0).
 
 There are two names available for each company, a common name (denoted by `name`) and its legal name (denoted by `legal_name`). To obtain the common name we take each legal name and remove the words: Inc, Corp and Group.
+
+The industry categories are not always available (for about 150 stocks). This happens for exchange traded funds (ETFs), over-the-counter contracts (OTCs) and some other stocks. When a category is not available an empty string is returned instead.

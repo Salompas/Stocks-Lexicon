@@ -14,11 +14,9 @@ assert 'marketcap.csv' in os.listdir(_DATA_FOLDER), \
 class Stocks:
     def __init__(self):
         """
-        contents are based on ticker symbols
-        for each ticker you have a dictionary that has:
-         - market captilization values by years ('2007', '2008', ...)
-         - name of the stock ('legal_name')
-         - cleaned legal name ('name')
+        Populates the contents with market cap values per year and industry
+        categories for all companies with data available in the
+        file marketcap-years.csv.
         """
 
         # Load all ticker symbols and names available in 2018
@@ -49,7 +47,8 @@ class Stocks:
                 name=clearName,
                 industry=industryCategory
             )
-        # store useful statistics for printing object
+
+        # Store number of stocks, years and range of the data
         self.total_tickers = len(ticker)
         self.total_years = len(year)
         self.year_start = int(year[0])
@@ -57,8 +56,9 @@ class Stocks:
         self.range_years = range(self.year_start, self.year_end + 1)
 
     def __repr__(self):
-        return (f'Stocks: {self.total_tickers} assets',
-                f' over {str(self.range_years)}')
+        return '\n'.join((f'Stocks',
+                          f'Total Tickers: {self.total_tickers}',
+                          f'Data Range: {str(self.range_years)}'))
 
     def __call__(self, ticker, field=''):
         """
@@ -90,8 +90,8 @@ class Stocks:
         """
         Constructs a list of all company names available.
         """
-        self.allNames = np.array([self(k, 'name') for k in self.contents.keys()],
-                                 dtype='<U500')
+        self.allNames = np.array(
+            [self(k, 'name') for k in self.contents.keys()], dtype='<U500')
 
     @staticmethod
     def categorizeMarketcap(marketcap):
@@ -185,10 +185,97 @@ class Stocks:
             self.__build_list_of_names__()
             return self.allNames
 
-# # Remove this
-# (marketcap, names, ticker) = parser.loadMarketcapNames(_DATA_FOLDER)
+    def industry(self, ticker):
+        """
+        Returns the company's industry category.
 
+        The possible categories are:
+        - Automotive
+        - Consumer Durables
+        - Food & Beverage
+        - Material & Construction
+        - Insurance
+        - Banking
+        - Wholesale
+        - Metals & Mining
+        - Computer Software & Services
+        - Chemicals
+        - Leisure
+        - Transportation
+        - Telecommunications
+        - Media
+        - Electronics
+        - Health Services
+        - Utilities
+        - Tobacco
+        - Financial Services
+        - Diversified Services
+        - Internet
+        - Retail
+        - Specialty Retail
+        - Conglomerates
+        - Computer Hardware
+        - Aerospace/Defense
+        - Real Estate
+        - Drugs
+        - Energy
+        - Consumer NonDurables
+        - Manufacturing
+        - Empty String (''): no category is available (ETFs for example)
 
-# Alert user of library being loaded
-print(f'Loaded: stockslexicon/stocks.py\n',
-      f'To use the module instantiate the class: Stocks')
+        Input:
+         ticker: string, company ticker symbol
+
+        Output:
+         industry: string, industry category
+        """
+        return self.contents[ticker]['industry']
+
+    def industryFromName(self, name):
+        """
+        Returns a company's industry category from its name as
+        opposed to from its ticker symbol.
+
+        See Stocks.industry for industry categories.
+        """
+        return self.industry(self.tickerFromName(name))
+
+    def generalizeTicker(self, ticker, year='2018'):
+        """
+        Returns a generalized representation of a company from its
+        ticker symbol.
+        The representation generalizes the company to:
+        - Company size: market cap category
+                        (see Stocks.categorizeMarketcap for categories)
+        - Company industry: industry category
+                        (see Stocks.industry for categories)
+
+        Input:
+         ticker: string, ticker symbol of a company (e.g.: 'AAPL')
+         year: string or int, year of the market cap
+
+        Output:
+         res: tuple, first element is the company size and the
+              second is the company industry
+        """
+        return (self.size(ticker, str(year)), self.industry(ticker))
+
+    def generalizeName(self, name, year='2018'):
+        """
+        Returns a generalized representation of a company from its
+        name.
+        The representation generalizes the company to:
+        - Company size: market cap category
+                        (see Stocks.categorizeMarketcap for categories)
+        - Company industry: industry category
+                        (see Stocks.industry for categories)
+
+        Input:
+         ticker: string, company name (e.g.: 'Apple')
+         year: string or int, year of the market cap
+
+        Output:
+         res: tuple, first element is the company size and the
+              second is the company industry
+        """
+        return (self.sizeFromName(name, year), self.industryFromName(name))

@@ -138,7 +138,3 @@ def loadCompanyNames(path='data/'):
             name = ' '.join(split[1:-1]).strip()
             res[ticker] = name
     return res
-
-
-# Alert user of library being loaded
-print(f'Loaded: stockslexicon/lib/parser.py')
