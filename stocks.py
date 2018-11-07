@@ -2,6 +2,7 @@
 import os
 import numpy as np
 from .lib import parser
+from fuzzywuzzy import process
 
 # obtain path to data folder
 _DATA_FOLDER = f'{__file__[:-9]}/data/'
@@ -55,6 +56,10 @@ class Stocks:
         self.year_end = int(year[-1])
         self.range_years = range(self.year_start, self.year_end + 1)
 
+        # generate helper dictionaries
+        self.__build_list_of_names__()  # list of all company names
+        self.__build_name_ticker_dict__()  # maps company name to ticker
+
     def __repr__(self):
         return '\n'.join((f'Stocks',
                           f'Total Tickers: {self.total_tickers}',
@@ -85,6 +90,9 @@ class Stocks:
         Constructs a map between company names to company tickers.
         """
         self.nameToTicker = {v['name']: k for k, v in self.contents.items()}
+        # Update company names that are better known by other names
+        # For example: Alphabet with ticker GOOG is better known as Google
+        self.nameToTicker['Google'] = 'GOOG'
 
     def __build_list_of_names__(self):
         """
@@ -156,6 +164,8 @@ class Stocks:
         except AttributeError:
             self.__build_name_ticker_dict__()
             return self.tickerFromName(name)
+        except KeyError:
+            raise KeyError
 
     def sizeFromName(self, name, year='2018'):
         """
@@ -229,7 +239,7 @@ class Stocks:
         Output:
          industry: string, industry category
         """
-        return self.contents[ticker]['industry']
+        return '_'.join(self.contents[ticker]['industry'].split(' '))
 
     def industryFromName(self, name):
         """
@@ -279,3 +289,133 @@ class Stocks:
               second is the company industry
         """
         return (self.sizeFromName(name, year), self.industryFromName(name))
+
+    def generalizeNameFuzzy(self, name, year='2018'):
+        """
+        Returns a generalized representation of a company from its
+        name. Uses fuzzy search to match company name.
+        The representation generalizes the company to:
+        - Company size: market cap category
+                        (see Stocks.categorizeMarketcap for categories)
+        - Company industry: industry category
+                        (see Stocks.industry for categories)
+
+        Input:
+         ticker: string, company name (e.g.: 'Apple')
+         year: string or int, year of the market cap
+
+        Output:
+         res: tuple, first element is the company size and the
+              second is the company industry
+        """
+        try:
+            res = process.extractOne(name, self.allNames)
+        except AttributeError:
+            self.__build_list_of_names__()
+            return self.generalizeNameFuzzy(name, year)
+        else:
+            if res[1] >= 95:    # scores go from 0 to 100, 95 is the chosen threshold
+                return (self.sizeFromName(res[0], year),
+                        self.industryFromName(res[0]))
+            else:
+                raise ValueError
+
+    def findNameInString(self, string):
+        """
+        Finds name of a company in a string and returns the range of indices
+        to get that name.
+
+        Input:
+         string: string, contains sequence of words separated by whitespace
+
+        Output:
+         result: slice or None, if not None then contains a slice that matches
+                 the company name in the original string. That is, if you call
+                 string[result] you will get the company name that was found.
+        """
+        for name in self.allNames:
+            if name in string:
+                starts_at = string.index(name)
+                ends_at = starts_at + len(name)
+                return slice(starts_at, ends_at)
+        return None
+
+    def generalizeCompany(self, ticker_or_name, year='2018'):
+        """
+        Generalizes a company name or ticker to its market cap category.
+
+        Intput:
+         ticker_or_name: string, contains either a company name or a ticker
+
+        Output:
+         result: string or None, if ticker_or_name contains the name or ticker
+                 of some company, then returns its market cap and industry categories
+        """
+        res = None
+        try:
+            res = '_'.join(self.generalizeTicker(ticker_or_name, year)).upper()
+        except KeyError:
+            try:
+                res = '_'.join(self.generalizeName(ticker_or_name, year)).upper()
+            except KeyError:
+                pass
+        return res
+
+    # def generalizeTickersInString(self, string, year='2018'):
+    #     """
+    #     Takes a string without company names and generalizes each of its words.
+    #     If the word is a ticker symbol,
+    #     excluding tickers with a single letter, then it is generalized to the
+    #     company market cap and industry categories.
+    #     If the word is not a ticker symbol, then it is not modified.
+    #     """
+    #     parsed = ''
+    #     for word in string.split(' '):
+    #         # skip single letters
+    #         if len(word) != 1:
+    #             try:
+    #                 parsed += self.generalizeCompany(word, year)
+    #             except TypeError:
+    #                 parsed += word
+    #             finally:
+    #                 parsed += ' '
+    #     return parsed.strip()
+
+
+    # def generalizeString(self, string, year='2018'):
+    #     """
+    #     Parses a string applying the following generalization:
+    #     - Stocks-Lexicon: generalize company names to market cap (6 categories)
+    #                  (there are about ___ companies which are mapped
+    #                   to ___ market cap categories) and industry category
+
+    #     Input:
+    #      string: string, a string which may contain the name/ticker of companies
+    #      year: string, contains year from which to recover the market cap category
+
+    #     Output:
+    #      result: string, contains original string but with company names and tickers
+    #              substituted by their respective market cap and industry categories
+    #     """
+    #     # find company names
+    #     indices = self.findNameInString(string)
+    #     # if there are no company names, then generalize tickers
+    #     if indices == None:
+    #         return self.generalizeTickersInString(string, year)
+    #     else:                       # there is a company name in the string
+    #         company = self.generalizeCompany(string[indices], year)
+    #         # get substrings around the company name
+    #         before = string[:indices.start]
+    #         after = string[indices.stop:]
+    #         if len(before) == 0 and len(after) == 0:
+    #             return f'{company}'
+    #         elif len(before) == 0 and len(after) != 0:
+    #             after_parsed = self.generalizeString(after, year)
+    #             return f'{company} {after_parsed}'
+    #         elif len(before) != 0 and len(after) == 0:
+    #             before_parsed = self.generalizeString(before, year)
+    #             return f'{before_parsed} {company}'
+    #         elif len(before) != 0 and len(after) != 0:
+    #             before_parsed = self.generalizeString(before, year)
+    #             after_parsed = self.generalizeString(after, year)
+    #             return f'{before_parsed} {company} {after_parsed}'

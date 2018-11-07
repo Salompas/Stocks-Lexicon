@@ -1,12 +1,12 @@
 # Table of Contents
 
-1.  [Stocks Lexicon](#orgba5781f)
-2.  [Installation](#orgd7d9b1b)
-3.  [Examples](#org8c47d49)
-4.  [Details](#org272ba67)
+1.  [Stocks Lexicon](#orga1d430c)
+2.  [Installation](#org2ecadd6)
+3.  [Examples](#orgaa22948)
+4.  [Details](#orgd553c27)
 
 
-<a id="orgba5781f"></a>
+<a id="orga1d430c"></a>
 
 # Stocks Lexicon
 
@@ -168,7 +168,7 @@ The market cap categories and industry categories are listed below:
 </table>
 
 
-<a id="orgd7d9b1b"></a>
+<a id="org2ecadd6"></a>
 
 # Installation
 
@@ -178,15 +178,15 @@ First, clone the repository to your project folder:
     git clone https://github.com/Salompas/stockslexicon.git
     # creates a new folder named stockslexicon
 
-The module defines a single class \`Stock\` that has methods to interact with the data. You can import the class directly:
+The module defines a single class `Stock` that has methods to interact with the data. You can import the class directly:
 
     from stockslexicon.stocks import Stocks
     stocks = Stocks()                # instantiate the class
 
-All methods of the class are documented and can be accessed via \`help(Stocks)\`.
+All methods of the class are documented and can be accessed via `help(Stocks)`.
 
 
-<a id="org8c47d49"></a>
+<a id="orgaa22948"></a>
 
 # Examples
 
@@ -216,7 +216,7 @@ To generalize a company's name or ticker:
     stocks.generalizeName('Alphabet', 2018)  # ('Mega', 'Internet')
 
 
-<a id="org272ba67"></a>
+<a id="orgd553c27"></a>
 
 # Details
 
@@ -228,6 +228,6 @@ The market capitalization is computed at the end of each year, except in 2018 wh
 
 The market capitalization when not available for a company in some year is replaced by a zero (0).
 
-There are two names available for each company, a common name (denoted by \`name\`) and its legal name (denoted by \`legal<sub>name</sub>\`). To obtain the common name we take each legal name and remove the words: Inc, Corp and Group.
+There are two names available for each company, a common name (denoted by `name`) and its legal name (denoted by `legal_name`). To obtain the common name we take each legal name and remove the words: Inc, Corp and Group.
 
 The industry categories are not always available (for about 150 stocks). This happens for exchange traded funds (ETFs), over-the-counter contracts (OTCs) and some other stocks. When a category is not available an empty string is returned instead.
